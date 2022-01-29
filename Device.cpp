@@ -44,6 +44,9 @@ Device::Device(uint8_t cs) : comms(SPI_COMMS), cs(cs), spiClockSpeed(1000000) {}
 Device::Device(uint8_t sda, uint8_t scl) : comms(I2C_COMMS_DEFINED_PINS), sda(sda), scl(scl) {}	// Constructor for ESP32 I2C with user-defined pins
 Device::Device(uint8_t cs, uint8_t spiPort, SPIClass& spiClass) 										// Constructor for ESP32 HSPI communications
 	: comms(SPI_COMMS), cs(cs), spiPort(spiPort), spi(&spiClass), spiClockSpeed(1000000) {}
+#elif defined ARDUINO_TEENSY41
+Device::Device(uint8_t cs, uint8_t spiPort, SPIClass& spiClass) 										// Constructor for Teensy 4.1 SPI communications
+	: comms(SPI_COMMS), cs(cs), spiPort(spiPort), spi(&spiClass), spiClockSpeed(1000000) {}
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +97,23 @@ void Device::initialise()																						// Initialise device communicatio
 		{
 			spi = &SPI;																										// Start VSPI on SCK 5, MOSI 18, MISO 19, SS CS
 			spi->begin();
-		}														
+		}
+#elif defined ARDUINO_TEENSY41
+		if (spiPort == 1)																						// Set-up spi pointer for Teensy SPI comms
+		{
+			spi = &SPI1;																										
+			spi->begin();																		
+		}
+		else if (spiPort == 2)																						// Set-up spi pointer for Teensy SPI comms
+		{
+			spi = &SPI2;																										
+			spi->begin();																		
+		}
+		else
+		{
+			spi = &SPI;																										
+			spi->begin();
+		}												
 #else
 		spi = &SPI;																											// Set-up spi pointer for SPI communications
 		spi->begin();

@@ -54,6 +54,8 @@ BMP280_DEV::BMP280_DEV(uint8_t cs) : Device(cs) {}			   			// Constructor for SP
 #ifdef ARDUINO_ARCH_ESP32 																			
 BMP280_DEV::BMP280_DEV(uint8_t sda, uint8_t scl) : Device(sda, scl) { setI2CAddress(BMP280_I2C_ADDR); } 	// Constructor for I2C comms on ESP32
 BMP280_DEV::BMP280_DEV(uint8_t cs, uint8_t spiPort, SPIClass& spiClass) : Device(cs, spiPort, spiClass) {} // Constructor for SPI communications on the ESP32
+#elif defined ARDUINO_TEENSY41																		
+BMP280_DEV::BMP280_DEV(uint8_t cs, uint8_t spiPort, SPIClass& spiClass) : Device(cs, spiPort, spiClass) {} // Constructor for SPI communications on the ESP32
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

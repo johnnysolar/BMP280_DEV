@@ -42,6 +42,8 @@
 
 #if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
 enum Comms { I2C_COMMS, SPI_COMMS, I2C_COMMS_DEFINED_PINS };
+#elif defined ARDUINO_TEENSY41
+enum Comms { I2C_COMMS, SPI_COMMS};
 #else						 
 enum Comms { I2C_COMMS, SPI_COMMS };		 
 #endif
@@ -60,6 +62,8 @@ class Device{
 #ifdef ARDUINO_ARCH_ESP32
 		Device(uint8_t sda, uint8_t scl);														// Device object for ESP32 I2C operation with user-defined pins
 		Device(uint8_t cs, uint8_t spiPort, SPIClass& spiClass);		// Device object for ESP32 HSPI operation with supplied SPI object
+#elif defined ARDUINO_TEENSY41
+		Device(uint8_t cs, uint8_t spiPort, SPIClass& spiClass);		// Device object for SPI operation with supplied SPI object
 #endif		
 		void setClock(uint32_t clockSpeed);													// Set the I2C/SPI clock speed
 	protected:
@@ -74,6 +78,8 @@ class Device{
 		uint8_t cs;																									// The SPI chip select pin
 #ifdef ARDUINO_ARCH_ESP32
 		uint8_t spiPort;																						// SPI port type VSPI or HSPI
+#elif ARDUINO_TEENSY41
+		uint8_t spiPort;																						// SPI port type --WHAT GOES HERE??
 #endif
 		SPIClass* spi;																							// Pointer to the SPI class
 		uint32_t spiClockSpeed;																			// The SPI clock speed
